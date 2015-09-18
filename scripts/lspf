@@ -1,0 +1,7 @@
+#!/bin/bash
+
+out=$(upnpc -l)
+
+localip=$(echo "$out" | grep "Local LAN ip address" | cut -d: -f2 | sed 's/^ *//')
+
+echo "$out" | grep "TCP *[0-9]\{1,5\}->$localip:[0-9]\{1,5\}" | sed "s/.*\(TCP.*$localip:[0-9]\{1,5\}\).*/\1/"

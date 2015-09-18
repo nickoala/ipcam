@@ -1,0 +1,42 @@
+#!/bin/bash
+
+print_usage_exit () {
+    echo "Usage: "
+    echo "  $0 <external> <internal>    create port forward"
+    echo "  $0 delete <external>        delete port forward"
+    exit 1
+}
+
+if test $# -ne 2; then
+    print_usage_exit
+fi
+
+digits='^[0-9]+$'
+
+if [[ $1 =~ $digits ]] && [[ $2 =~ $digits ]]; then
+    action=create
+    external=$1
+    internal=$2
+elif test "$1" = "delete" && [[ $2 =~ $digits ]]; then
+    action=delete
+    external=$2
+else
+    print_usage_exit
+fi
+
+# Make sure port numbers within range
+if test $external -gt 65535 || test ${internal:-0} -gt 65535; then
+    echo Error: Port number must be 0-65535
+    exit 1
+fi
+
+out=$(upnpc -l)
+
+localip=$(echo "$out" | grep "Local LAN ip address" | cut -d: -f2 | sed 's/^ *//')
+
+if test $action = "delete"; then
+    upnpc -d $external TCP > /dev/null
+else
+    upnpc -a $localip $internal $external TCP > /dev/null
+    upnpc -l | grep "TCP *$external->$localip:$internal" | sed "s/.*\(TCP *$external->$localip:$internal\).*/\1/"
+fi

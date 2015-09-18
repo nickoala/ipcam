@@ -1,0 +1,11 @@
+#!/bin/bash
+
+out=$(upnpc -l)
+
+internalip=$(echo "$out" | grep "Local LAN ip address" | cut -d: -f2 | sed 's/^ *//')
+externalip=$(echo "$out" | grep "ExternalIPAddress" | cut -d= -f2 | sed 's/^ *//')
+publicip=$(curl 'https://api.ipify.org' --silent)
+
+echo "Internal=$internalip"
+echo "External=$externalip"
+echo "Public=$publicip"
