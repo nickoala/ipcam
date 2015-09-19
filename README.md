@@ -84,6 +84,18 @@ The command `pf 54321 8080` creates a linking between (1) and (2), exposing the 
 Now, make sure your cell phone is **not on the same LAN** as the Pi. On the cell phone, open a browser or VLC player, point it to:  
 `http://<Router's Public IP>:54321/?action=stream`
 
+If the router's IP address stays constant, we could stop right now, and the IP cam finished. As the saying goes, however, change is the only constant, especially your router's IP address. We need a way to communicate the most current IP address.
+
+The usual way to do this is to get a domain name, and use a Dynamic Domain Name Service (DDNS) to keep the IP address up-to-date. Here, I choose another approach - **use Telegram to "simulate" a DDNS**.
+
+Before moving on, remember to delete the port-forward to hide the video stream from the outside world:
+
+```
+pf delete 54321  # remove port forward
+lspf             # check
+```
+
+## Get a Telegram Bot account
 
 
 ## More coming ...
