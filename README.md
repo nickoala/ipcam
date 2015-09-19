@@ -12,6 +12,8 @@ This system is intended for use by one person only. Its purpose is educational.
 
 ## First ...
 
+`sudo raspi-config` and select **Enable Camera**. Then, finish and **reboot**.
+
 Go to the [scripts](https://github.com/nickoala/ipcam/tree/master/scripts) directory, copy to your Pi these shell scripts:
 
 - `cs`: **C**am **S**tream - start and stop the streaming server
@@ -97,5 +99,21 @@ lspf             # check
 
 ## Get a Telegram Bot account
 
+I have written a lot about [Telegram Bot API](https://core.telegram.org/bots):
+
+- [How to setup a Telegram Bot on Raspberry Pi](http://www.instructables.com/id/Set-up-Telegram-Bot-on-Raspberry-Pi/)
+- **[telepot](https://github.com/nickoala/telepot)**: a Python wrapper for Telegram Bot API
+
+Please create a bot account by [chatting with BotFather](https://core.telegram.org/bots), and know two things:
+
+- your bot's token
+- your own Telegram user ID
+
+For the latter, you really have to familiarize yourself with [telepot](https://github.com/nickoala/telepot), which you may install by:
+
+```
+sudo apt-get install python-pip
+sudo pip install telepot
+```
 
 ## More coming ...
