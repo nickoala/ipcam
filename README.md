@@ -120,13 +120,17 @@ sudo pip install telepot
 
 Copy to the Pi the Python script, [ipcam.py](https://github.com/nickoala/ipcam/blob/master/ipcam.py). It is a Telegram bot that does the following:
 
-- On startup, it starts `mjpg_streamer` by calling the `cs` script. No router port is open yet, so the video stream is not accessible from the outside.
+- On startup, it starts the video stream. No router port is open yet, so the video stream is not accessible from the outside.
 - On receiving the `/open` command (via Bot API), it opens a port (default: 54321) through the router and text you the public URL with which you may view the video stream.
 - On receiving the `/close` command, it closes the port on the router, so the video stream is no longer accessible from the outside.
 - It verifies the user ID of each message received, so only the designated user may control it.
 
-Run it by:
+Recall the bot's token and your own user ID from the previous step:
 
 ```
 python3.2 ipcam.py <token> <user_id>
 ```
+
+<div style="text-align:center;">
+<img src="https://github.com/nickoala/ipcam/blob/master/ipcam.png?raw=true"/>
+</div>
