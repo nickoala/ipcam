@@ -130,3 +130,5 @@ Recall the bot's token and your own user ID from the previous step:
 ```
 python3.2 ipcam.py <token> <user_id>
 ```
+
+![](https://github.com/nickoala/ipcam/blob/master/ipcam.png?raw=true)
