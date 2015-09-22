@@ -109,11 +109,24 @@ Please create a bot account by [chatting with BotFather](https://core.telegram.o
 - your bot's token
 - your own Telegram user ID
 
-For the latter, you really have to familiarize yourself with [telepot](https://github.com/nickoala/telepot), which you may install by:
+For the latter, you really have to familiarize yourself with [telepot](https://github.com/nickoala/telepot). You will need it in the next step, too. Install it now:
 
 ```
 sudo apt-get install python-pip
 sudo pip install telepot
 ```
 
-## More coming ...
+## Run the bot
+
+Copy to the Pi the Python script, [ipcam.py](https://github.com/nickoala/ipcam/blob/master/ipcam.py). It is a Telegram bot that does the following:
+
+- On startup, it starts `mjpg_streamer` by calling the `cs` script. No router port is open yet, so the video stream is not accessible from the outside.
+- On receiving the `/open` command (via Bot API), it opens a port (default: 54321) through the router and text you the public URL with which you may view the video stream.
+- On receiving the `/close` command, it closes the port on the router, so the video stream is no longer accessible from the outside.
+- It verifies the user ID of each message received, so only the designated user may control it.
+
+Run it by:
+
+```
+python3.2 ipcam.py <token> <user_id>
+```
