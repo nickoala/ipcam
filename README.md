@@ -112,8 +112,8 @@ Please create a bot account by [chatting with BotFather](https://core.telegram.o
 For the latter, you really have to familiarize yourself with [telepot](https://github.com/nickoala/telepot). You will need it in the next step, too. Install it now:
 
 ```
-sudo apt-get install python-pip
-sudo pip install telepot
+sudo apt-get install python3-pip
+sudo pip-3.2 install telepot
 ```
 
 ## Run the bot
