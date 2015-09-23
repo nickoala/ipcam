@@ -16,10 +16,16 @@ Only intended to be used by one person, indicated by the <user_id> argument
 on the command-line.
 """
 
+cs = '/usr/local/sbin/cs'
+pf = '/usr/local/sbin/pf'
+ipaddr = '/usr/local/sbin/ipaddr'
+
 EXTERNAL_PORT = 54321
 INTERNAL_PORT = 8080  # mjpg_streamer default
 
 def handle(msg):
+    global pf, ipaddr
+
     type, from_id, chat_id = telepot.glance(msg)
 
     if type != 'text':
@@ -34,10 +40,10 @@ def handle(msg):
 
     if command == '/open':
         # port forward
-        subprocess.call(['pf', str(EXTERNAL_PORT), str(INTERNAL_PORT)])
+        subprocess.call([pf, str(EXTERNAL_PORT), str(INTERNAL_PORT)])
 
         # extract IP addresses
-        out = subprocess.check_output(['ipaddr'])
+        out = subprocess.check_output([ipaddr])
 
         # Output:
         # Internal=zzz.zzz.zzz.zzz
@@ -54,7 +60,7 @@ def handle(msg):
 
     elif command == '/close':
         # delete port forward
-        subprocess.call(['pf', 'delete', str(EXTERNAL_PORT)])
+        subprocess.call([pf, 'delete', str(EXTERNAL_PORT)])
 
         bot.sendMessage(from_id, 'Port closed')
     else:
@@ -65,7 +71,7 @@ TOKEN = sys.argv[1]
 USER_ID = int(sys.argv[2])  # only one user is allowed
 
 # Start streaming
-subprocess.call(['cs', 'start'])
+subprocess.call([cs, 'start'])
 
 bot = telepot.Bot(TOKEN)
 bot.notifyOnMessage(handle)
