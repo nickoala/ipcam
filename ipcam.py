@@ -49,11 +49,11 @@ def handle(msg):
         # Internal=zzz.zzz.zzz.zzz
         # External=zzz.zzz.zzz.zzz
         # Public=zzz.zzz.zzz.zzz
-        ipaddr = dict([line.split('=') for line in out.decode('ascii').strip().split('\n')])
+        ip = dict([line.split('=') for line in out.decode('ascii').strip().split('\n')])
 
-        reply = 'http://%s:%d/?action=stream' % (ipaddr['External'], EXTERNAL_PORT)
+        reply = 'http://%s:%d/?action=stream' % (ip['External'], EXTERNAL_PORT)
 
-        if ipaddr['External'] != ipaddr['Public']:
+        if ip['External'] != ip['Public']:
             reply += '\nmay not be accessible from outside'
 
         bot.sendMessage(from_id, reply)
