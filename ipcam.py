@@ -64,7 +64,7 @@ def handle(msg):
 
         bot.sendMessage(from_id, 'Port closed')
     else:
-        bot.sendMessage(from_id, '%s??? What you talking about?' % command)
+        bot.sendMessage(from_id, "I don't understand")
 
 
 TOKEN = sys.argv[1]
