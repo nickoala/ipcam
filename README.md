@@ -14,7 +14,16 @@ This system is intended for use by one person only. Its purpose is educational.
 
 `sudo raspi-config` and select **Enable Camera**. Then, finish and **reboot**.
 
-Go to the [scripts](https://github.com/nickoala/ipcam/tree/master/scripts) directory, copy to your Pi these shell scripts:
+Download the project.
+
+```
+cd ~
+wget https://github.com/nickoala/ipcam/archive/master.zip
+unzip ipcam-master.zip
+mv ipcam-master ipcam
+```
+
+Inside `ipcam/scripts`, there are 4 shell scripts:
 
 - `cs`: **C**am **S**tream - start and stop the streaming server
 - `pf`: **P**ort **F**orward - create and delete port-forwards to Raspberry Pi
@@ -118,17 +127,13 @@ sudo pip-3.2 install telepot
 
 ## Run the bot
 
-Copy to the Pi the Python script, [ipcam.py](https://github.com/nickoala/ipcam/blob/master/ipcam.py). It is a Telegram bot that does the following:
+```
+python3.2 ~/ipcam/ipcam.py <token> <user_id>
+```
 
 - On startup, it starts the video stream. No router port is open yet, so the video stream is not accessible from the outside.
 - On receiving the `/open` command (via Bot API), it opens a port (default: 54321) through the router and text you the public URL with which you may view the video stream.
 - On receiving the `/close` command, it closes the port on the router, so the video stream is no longer accessible from the outside.
 - It verifies the user ID of each message received, so only the designated user may control it.
 
-Recall the bot's token and your own user ID from the previous step:
-
-```
-python3.2 ipcam.py <token> <user_id>
-```
-
-![](https://github.com/nickoala/ipcam/blob/master/ipcam.png?raw=true)
+![](https://github.com/nickoala/ipcam/blob/master/images/ipcam.png?raw=true)
