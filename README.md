@@ -19,7 +19,7 @@ Download the project.
 ```
 cd ~
 wget https://github.com/nickoala/ipcam/archive/master.zip
-unzip ipcam-master.zip
+unzip master.zip
 mv ipcam-master ipcam
 ```
 
