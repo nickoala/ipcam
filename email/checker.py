@@ -51,6 +51,7 @@ server.logout()
 
 
 # Keep checking messages ...
+# I don't like using IDLE because Yahoo does not support it.
 while 1:
     # Have to login/logout each time because that's the only way to get fresh results.
 
