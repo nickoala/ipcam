@@ -26,14 +26,14 @@ INTERNAL_PORT = 8080  # mjpg_streamer default
 def handle(msg):
     global pf, ipaddr
 
-    type, from_id, chat_id = telepot.glance(msg)
+    content_type, chat_type, chat_id = telepot.glance(msg)
 
-    if type != 'text':
-        print('Invalid %s message from %d' % (type, from_id))
+    if content_type != 'text':
+        print('Invalid %s message from %d' % (content_type, chat_id))
         return
-    
-    if from_id != USER_ID:
-        print('Unauthorized user: %d' % from_id)
+
+    if chat_id != USER_ID:
+        print('Unauthorized user: %d' % chat_id)
         return
 
     command = msg['text'].strip().lower()
@@ -56,15 +56,15 @@ def handle(msg):
         if ip['External'] != ip['Public']:
             reply += '\nmay not be accessible from outside'
 
-        bot.sendMessage(from_id, reply)
+        bot.sendMessage(chat_id, reply)
 
     elif command == '/close':
         # delete port forward
         subprocess.call([pf, 'delete', str(EXTERNAL_PORT)])
 
-        bot.sendMessage(from_id, 'Port closed')
+        bot.sendMessage(chat_id, 'Port closed')
     else:
-        bot.sendMessage(from_id, "I don't understand")
+        bot.sendMessage(chat_id, "I don't understand")
 
 
 TOKEN = sys.argv[1]
