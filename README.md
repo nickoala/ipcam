@@ -40,7 +40,9 @@ They won't work yet, because we have not installed the necessary software.
 sudo apt-get update
 sudo apt-get upgrade
 sudo rpi-update
-cd ~
+sudo reboot
+```
+```
 sudo apt-get install subversion libjpeg8-dev imagemagick libav-tools cmake
 git clone https://github.com/jacksonliam/mjpg-streamer.git
 cd mjpg-streamer/mjpg-streamer-experimental
