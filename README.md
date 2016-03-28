@@ -61,11 +61,12 @@ If you find it slow, [a lot of options](https://github.com/foosel/OctoPrint/wiki
 
 To ease the process of starting and stopping the streaming server, I give you the `cs` script, which you should have already put into `/usr/local/sbin`. With `mjpg_streamer` installed, try these self-explanatory commands: `cs start`, `cs stop`, `cs status`. They respectively run, kill, and check the `mjpg_streamer` command. Edit the `cs` script to adjust streaming options to your liking.
 
+-----
 As a side note, you can tell mjpg_streamer to take a snapshot. For example, try this in the browser:  
 `http://<your Raspi's IP>:8080/?action=snapshot`
 
 Or try this on another Raspberry Pi:  
-`wget http://192.168.1.1:8080/?action=snapshot -O output.jpg`
+`wget http://<your Raspi's IP>:8080/?action=snapshot -O output.jpg`
 
 -----
 I have also considered **VLC** and **Motion** as the streaming software, but they generally stream VERY slowly (i.e. VERY long lag time) over 4G networks. They don't provide an easy way to control parameters, like frame rate and picture quality, that affect bandwidth usage.
