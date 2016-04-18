@@ -74,7 +74,7 @@ USER_ID = int(sys.argv[2])  # only one user is allowed
 subprocess.call([cs, 'start'])
 
 bot = telepot.Bot(TOKEN)
-bot.notifyOnMessage(handle)
+bot.message_loop(handle)
 print('Listening ...')
 
 while 1:
