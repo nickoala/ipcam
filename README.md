@@ -134,7 +134,7 @@ python ~/ipcam/ipcam.py <token>
 ```
 
 - On startup, it starts the video stream. No router port is open yet, so the video stream is not accessible from the outside.
-- On receiving the `/open` command (via Bot API), it opens a port (default: 54321) through the router and text you the public URL with which you may view the video stream.
+- On receiving the `/open` command, it opens a port (default: 54321) through the router and text you the URL.
 - On receiving the `/close` command, it closes the port on the router, so the video stream is no longer accessible from the outside.
 
 ![](https://github.com/nickoala/ipcam/blob/master/images/ipcam.png?raw=true)

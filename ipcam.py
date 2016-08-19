@@ -29,10 +29,6 @@ def handle(msg):
         print 'Invalid %s message from %d' % (content_type, chat_id)
         return
 
-    if chat_id != USER_ID:
-        print 'Unauthorized user: %d' % chat_id
-        return
-
     command = msg['text'].strip().lower()
 
     if command == '/open':
