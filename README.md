@@ -1,38 +1,18 @@
 # IP Cam using Telegram as DDNS
 
-**Based on: Raspberry Pi 2 Model B + camera module, Raspbian, Python 3.2**  
-Setting: Pi → router → modem (which give the router a publicly-accessible IP address)
+**Based on: Raspberry Pi 3 Model B + camera module, Raspbian Jessie, Python 2.7**  
+Setting: Pi → router → modem (which should give the router a publicly-accessible IP address)
 
 You will learn:
 - to stream MJPEG video from Raspberry Pi
 - to open a port through the router to Raspberry Pi
 - to setup a Telegram bot on Raspberry Pi and use it to communicate the router's IP address to you, so you can view the video stream away from home
 
-This system is intended for use by one person only. Its purpose is educational.
+This system is intended for personal use and is not secure. Its purpose is educational.
 
-## First ...
+## Enable Camera
 
 `sudo raspi-config` and select **Enable Camera**. Then, finish and **reboot**.
-
-Download the project.
-
-```
-cd ~
-wget https://github.com/nickoala/ipcam/archive/master.zip
-unzip master.zip
-mv ipcam-master ipcam
-```
-
-Inside `ipcam/scripts`, there are 4 shell scripts:
-
-- `cs`: **C**am **S**tream - start and stop the streaming server
-- `pf`: **P**ort **F**orward - create and delete port-forwards to Raspberry Pi
-- `lspf`: List all port-forwards to Raspberry Pi
-- `ipaddr`: Extract all relevant IP addresses
-
-Use `chmod` to make them executable, then move them to `/usr/local/sbin`, so you can execute them like normal Linux commands.
-
-They won't work yet, because we have not installed the necessary software.
 
 ## Install mjpg_streamer
 
@@ -54,18 +34,16 @@ Run:
 ```
 
 You should be able to view the stream by pointing your browser or VLC player to:  
-`http://<your Raspi's IP>:8080/?action=stream`
+`http://<Pi's IP>:8080/?action=stream`
 
 If you find it slow, [a lot of options](https://github.com/foosel/OctoPrint/wiki/MJPG-Streamer-configuration) [can be set from the command-line](http://skillfulness.blogspot.hk/2010/03/mjpg-streamer-documentation.html).
 
-To ease the process of starting and stopping the streaming server, I give you the `cs` script, which you should have already put into `/usr/local/sbin`. With `mjpg_streamer` installed, try these self-explanatory commands: `cs start`, `cs stop`, `cs status`. They respectively run, kill, and check the `mjpg_streamer` command. Edit the `cs` script to adjust streaming options to your liking.
-
 -----
 As a side note, you can tell mjpg_streamer to take a snapshot. For example, try this in the browser:  
-`http://<your Raspi's IP>:8080/?action=snapshot`
+`http://<Pi's IP>:8080/?action=snapshot`
 
 Or try this on another Raspberry Pi:  
-`wget http://<your Raspi's IP>:8080/?action=snapshot -O output.jpg`
+`wget http://<Pi's IP>:8080/?action=snapshot -O output.jpg`
 
 -----
 I have also considered **VLC** and **Motion** as the streaming software, but they generally stream VERY slowly (i.e. VERY long lag time) over 4G networks. They don't provide an easy way to control parameters, like frame rate and picture quality, that affect bandwidth usage.
@@ -84,34 +62,34 @@ After this, you should have the `upnpc` command installed. `upnpc` stands for Un
 
 I would not detail the `upnpc` command here. It is part of the [MiniUPnP project](http://miniupnp.free.fr/). [Read](http://www.makelinux.com/man/1/U/upnpc) [more](http://superuser.com/questions/192132/how-to-automatically-forward-a-port-from-the-router-to-a-mac-upnp) [about it](https://forum.transmissionbt.com/viewtopic.php?t=15840) [if you want](http://po-ru.com/diary/using-upnp-igd-for-simpler-port-forwarding/).
 
-With `upnpc` installed, try:
+To list existing port-forwards:
 
 ```
-pf 54321 8080  # create port forward
-lspf           # check what you have done
-ipaddr         # see relevant IP addresses
+upnpc -l
 ```
 
-The last command extracts three IP addresses:
+**Pay attention to `ExternalIPAddress` in the output. It is your router's external IP address. You will have to be able to access this address if you want to see the video stream away from home.**
 
-1. Pi's internal IP address
-2. router's external IP address
-3. router's IP address as seen by the outside world
+To forward router's port `54321` → Pi's port `8080`:
 
-The command `pf 54321 8080` creates a linking between (1) and (2), exposing the video stream through the router. For the stream to be seen away from home, IP address (2) and (3) **must be identical**.
+```
+upnpc -a <Pi's INTERNAL IP> 8080 54321 TCP
+```
 
-Now, make sure your cell phone is **not on the same LAN** as the Pi. On the cell phone, open a browser or VLC player, point it to:  
-`http://<Router's Public IP>:54321/?action=stream`
+Assuming *mjpg_streamer is running* and router's *external IP address is accessible*, you should be able to view the video stream in a browser: 
 
-If the router's IP address stays constant, we could stop right now, and the IP cam finished. As the saying goes, however, change is the only constant, especially your router's IP address. We need a way to communicate the most current IP address.
+```
+http://<Router EXTERNAL IP>:54321/?action=stream
+```
+
+If the router's IP address stays constant, we could stop right now and the IP Cam project finished. However, the IP address is assigned by the ISP and does not stay the same. We need a way to communicate the most current IP address.
 
 The usual way to do this is to get a domain name, and use a Dynamic Domain Name Service (DDNS) to keep the IP address up-to-date. Here, I choose another approach - **use Telegram to "simulate" a DDNS**.
 
-Before moving on, remember to delete the port-forward to hide the video stream from the outside world:
+Before moving on, you may want to delete the port-forward to hide the video stream from the outside world:
 
 ```
-pf delete 54321  # remove port forward
-lspf             # check
+upnpc -d 54321 TCP
 ```
 
 ## Get a Telegram Bot account
@@ -121,27 +99,42 @@ I have written a lot about [Telegram Bot API](https://core.telegram.org/bots):
 - [How to setup a Telegram Bot on Raspberry Pi](http://www.instructables.com/id/Set-up-Telegram-Bot-on-Raspberry-Pi/)
 - **[telepot](https://github.com/nickoala/telepot)**: a Python wrapper for Telegram Bot API
 
-Please create a bot account by [chatting with BotFather](https://core.telegram.org/bots), and know two things:
+Obtain a bot token by [chatting with BotFather](https://core.telegram.org/bots).
 
-- your bot's token
-- your own Telegram user ID
+## Download this project
 
-For the latter, you really have to familiarize yourself with [telepot](https://github.com/nickoala/telepot). You will need it in the next step, too. Install it now:
+The goal is to run the [ipcam.py](https://github.com/nickoala/ipcam/blob/master/ipcam.py) script. It relies on some shell scripts provided with this project.
 
 ```
-sudo apt-get install python3-pip
-sudo pip-3.2 install telepot
+cd ~
+wget https://github.com/nickoala/ipcam/archive/master.zip
+unzip master.zip
+mv ipcam-master ipcam
+```
+
+Inside `ipcam/scripts`, there are 4 shell scripts:
+
+- `cs`: **C**am **S**tream - start and stop the streaming server
+- `pf`: **P**ort **F**orward - create and delete port-forwards to Raspberry Pi
+- `lspf`: List all port-forwards to Raspberry Pi
+- `ipaddr`: Extract all relevant IP addresses
+
+Use `chmod` to make them executable, then move them to `/usr/local/sbin`, so they can be executed like normal Linux commands:
+
+```
+cd ipcam/scripts
+chmod +x *
+sudo mv * /usr/local/sbin
 ```
 
 ## Run the bot
 
 ```
-python3.2 ~/ipcam/ipcam.py <token> <user_id>
+python ~/ipcam/ipcam.py <token>
 ```
 
 - On startup, it starts the video stream. No router port is open yet, so the video stream is not accessible from the outside.
 - On receiving the `/open` command (via Bot API), it opens a port (default: 54321) through the router and text you the public URL with which you may view the video stream.
 - On receiving the `/close` command, it closes the port on the router, so the video stream is no longer accessible from the outside.
-- It verifies the user ID of each message received, so only the designated user may control it.
 
 ![](https://github.com/nickoala/ipcam/blob/master/images/ipcam.png?raw=true)

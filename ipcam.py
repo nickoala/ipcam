@@ -4,16 +4,13 @@ import subprocess
 import telepot
 
 """
-$ python3.2 ipcam.py <token> <user_id>
+$ python ipcam.py <token>
 
 Use Telegram as a DDNS service, making an IP cam accessible over the internet.
 
 Accept two commands:
 /open: open a port through the router to the video stream, and send the URL
 /close: close the external port
-
-Only intended to be used by one person, indicated by the <user_id> argument
-on the command-line.
 """
 
 cs = '/usr/local/sbin/cs'
@@ -29,11 +26,11 @@ def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
 
     if content_type != 'text':
-        print('Invalid %s message from %d' % (content_type, chat_id))
+        print 'Invalid %s message from %d' % (content_type, chat_id)
         return
 
     if chat_id != USER_ID:
-        print('Unauthorized user: %d' % chat_id)
+        print 'Unauthorized user: %d' % chat_id
         return
 
     command = msg['text'].strip().lower()
@@ -68,14 +65,13 @@ def handle(msg):
 
 
 TOKEN = sys.argv[1]
-USER_ID = int(sys.argv[2])  # only one user is allowed
 
 # Start streaming
 subprocess.call([cs, 'start'])
 
 bot = telepot.Bot(TOKEN)
 bot.message_loop(handle)
-print('Listening ...')
+print 'Listening ...'
 
 while 1:
     time.sleep(10)
