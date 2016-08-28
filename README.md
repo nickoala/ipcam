@@ -97,9 +97,13 @@ upnpc -d 54321 TCP
 I have written a lot about [Telegram Bot API](https://core.telegram.org/bots):
 
 - [How to setup a Telegram Bot on Raspberry Pi](http://www.instructables.com/id/Set-up-Telegram-Bot-on-Raspberry-Pi/)
-- **[telepot](https://github.com/nickoala/telepot)**: a Python wrapper for Telegram Bot API
+- **[telepot](https://github.com/nickoala/telepot)**: a Python framework for Telegram Bot API
 
-Obtain a bot token by [chatting with BotFather](https://core.telegram.org/bots).
+Obtain a bot token by [chatting with BotFather](https://core.telegram.org/bots). And install the telepot package:
+
+```
+sudo pip install telepot
+```
 
 ## Download this project
 
@@ -124,7 +128,7 @@ Use `chmod` to make them executable, then move them to `/usr/local/sbin`, so the
 ```
 cd ipcam/scripts
 chmod +x *
-sudo mv * /usr/local/sbin
+sudo cp * /usr/local/sbin
 ```
 
 ## Run the bot
