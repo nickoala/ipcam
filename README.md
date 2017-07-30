@@ -12,15 +12,15 @@ This system is intended for personal use and is not secure. Its purpose is educa
 
 ## Enable Camera
 
-`sudo raspi-config` and select **Enable Camera**. Then, finish and **reboot**.
-
-## Install mjpg_streamer
-
 ```
 sudo apt-get update
 sudo apt-get upgrade
-sudo reboot
 ```
+
+`sudo raspi-config`, select **Interfacing Options** and enable **Camera**. Then, finish and **reboot**.
+
+## Install mjpg_streamer
+
 ```
 sudo apt-get install subversion libjpeg8-dev imagemagick libav-tools cmake
 git clone https://github.com/jacksonliam/mjpg-streamer.git
@@ -76,7 +76,7 @@ To forward router's port `54321` → Pi's port `8080`:
 upnpc -a <Pi's INTERNAL IP> 8080 54321 TCP
 ```
 
-Assuming *mjpg_streamer is running* and router's *external IP address is accessible*, you should be able to view the video stream in a browser: 
+Assuming *mjpg_streamer is running* and router's *external IP address is accessible*, you should be able to view the video stream in a browser:
 
 ```
 http://<Router EXTERNAL IP>:54321/?action=stream
