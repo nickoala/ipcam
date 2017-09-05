@@ -2,20 +2,20 @@ import sys
 import time
 import subprocess
 import telepot
+from telepot.loop import MessageLoop
 
 """
-$ python ipcam.py <token>
+$ python3 ipcam.py <token>
 
 Use Telegram as a DDNS service, making an IP cam accessible over the internet.
 
 Accept two commands:
-/open: open a port through the router to the video stream, and send the URL
-/close: close the external port
+  /open: open a port through the router to the video stream, and send the URL
+  /close: close the external port
 """
 
-cs = '/usr/local/sbin/cs'
-pf = '/usr/local/sbin/pf'
-ipaddr = '/usr/local/sbin/ipaddr'
+pf = '/usr/local/bin/pf'
+ipaddr = '/usr/local/bin/ipaddr'
 
 EXTERNAL_PORT = 54321
 INTERNAL_PORT = 8080  # mjpg_streamer default
@@ -26,7 +26,7 @@ def handle(msg):
     content_type, chat_type, chat_id = telepot.glance(msg)
 
     if content_type != 'text':
-        print 'Invalid %s message from %d' % (content_type, chat_id)
+        print('Invalid %s message from %d' % (content_type, chat_id))
         return
 
     command = msg['text'].strip().lower()
@@ -42,6 +42,8 @@ def handle(msg):
         # Internal=zzz.zzz.zzz.zzz
         # External=zzz.zzz.zzz.zzz
         # Public=zzz.zzz.zzz.zzz
+        #
+        # Parse output into dict
         ip = dict([line.split('=') for line in out.decode('ascii').strip().split('\n')])
 
         reply = 'http://%s:%d/?action=stream' % (ip['External'], EXTERNAL_PORT)
@@ -63,11 +65,12 @@ def handle(msg):
 TOKEN = sys.argv[1]
 
 # Start streaming
-subprocess.call([cs, 'start'])
+subprocess.call(['sudo', 'systemctl', 'start', 'mjpg_streamer.service'])
 
 bot = telepot.Bot(TOKEN)
-bot.message_loop(handle)
-print 'Listening ...'
+
+MessageLoop(bot, handle).run_as_thread()
+print('Listening ...')
 
 while 1:
     time.sleep(10)

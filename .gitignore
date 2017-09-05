@@ -1,3 +1,4 @@
 *.pyc
 vlc/
 supervisor/
+.remote-sync.json
